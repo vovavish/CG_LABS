@@ -63,17 +63,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static int sx, sy;
 	static HBRUSH hbrush_green, hbrush_black, hbrush_gray, hbrush_cyan, hbrush_yellow;
 	static int radius;
-	static int xmid = sx / 2;
-	static int ymid = sy / 2;
+	static int xmid, ymid;
 	static int padding;
+
 	switch (message)
 	{
 	case WM_CREATE:
+
 		hbrush_green = CreateSolidBrush(RGB(0, 255, 0));
 		hbrush_black = CreateSolidBrush(RGB(0, 0, 0));
-		hbrush_gray = CreateSolidBrush(RGB(47, 79, 79));
+		hbrush_gray = CreateSolidBrush(RGB(190, 190, 190));
 		hbrush_cyan = CreateSolidBrush(RGB(0, 255, 255));
-		hbrush_yellow = CreateSolidBrush(RGB(255, 215, 0));
+		hbrush_yellow = CreateSolidBrush(RGB(255, 255, 0));
 
 	case WM_SIZE:
 		sx = LOWORD(lParam);

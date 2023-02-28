@@ -29,8 +29,8 @@ int APIENTRY WinMain(HINSTANCE This, HINSTANCE Prev, LPSTR cmd, int mode)
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
+		400,
+		400,
 		HWND_DESKTOP,
 		NULL,
 		This,
@@ -152,7 +152,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	static int sx, sy;
 	static HPEN hpen1, hpen2;
-	int a, b, x_scr, y_scr;
+	int a, b, x_scr, y_scr, scaleX;
 	double x, h;
 
 	switch (message) {
@@ -181,11 +181,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SelectObject(hdc, hpen2);
 
 		h = 3 * M_PI / a;
-
-		for (x = -10; x < 10.0; x += h)
+		scaleX = 3;
+		for (x = -scaleX; x < scaleX; x += h)
 		{
-			x_scr = (x * a + a);
-			y_scr = b - b * (5 * x * x + 2 * x + 3) / 10;
+			x_scr = (x + 3.0f) * a / 3;
+
+			double temp = (5 * x * x + 2 * x - 1.2f) / 3.4f;
+			y_scr = - b * temp;
+			
+			/*x_scr = (x + scaleX) * a / scaleX;
+			y_scr = b - scaleX * (5 * x * x + 2 *x +3);*/
+
+			x_scr = (x + scaleX) * a / scaleX;
+			y_scr = b - scaleX/10*b * (5 * x * x + 2 * x+3) ;
+
+			if (x == -3)
+			{
+				MoveToEx(hdc, x_scr, y_scr, NULL);
+			}
+
 			LineTo(hdc, x_scr, y_scr);
 		}
 
