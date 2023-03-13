@@ -56,7 +56,58 @@ void paint_circle(HDC hdc, int x1, int y1, int radius, HBRUSH hbrush)
 	Ellipse(hdc, x1 - radius, y1 - radius, x1 + radius, y1 + radius);
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void print_grid(HDC hdc, int sx, int sy)
+{
+	if (sx >= 20)
+	{
+		for (int x = 0; x < sx; x += (sx / 10))
+		{
+			MoveToEx(hdc, x, 0, NULL);
+			LineTo(hdc, x, sy);
+		}
+	}
+
+	if (sy >= 20)
+	{
+		for (int y = 0; y < sy; y += (sy / 10))
+		{
+			MoveToEx(hdc, 0, y, NULL);
+			LineTo(hdc, sx, y);
+		}
+	}
+}
+
+LRESULT CALLBACK individual(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	PAINTSTRUCT ps;
+	HDC hdc;
+	static int sx, sy;
+
+	switch (message)
+	{
+	case WM_CREATE:
+	case WM_SIZE:
+		sx = LOWORD(lParam);
+		sy = HIWORD(lParam);
+
+		break;
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+
+		print_grid(hdc, sx, sy);
+
+		EndPaint(hWnd, &ps);
+
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+}
+
+LRESULT CALLBACK varinat_2(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
@@ -98,23 +149,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
-		if (sx >= 20)
-		{
-			for (int x = 0; x < sx; x += (sx / 10))
-			{
-				MoveToEx(hdc, x, 0, NULL);
-				LineTo(hdc, x, sy);
-			}
-		}
-
-		if (sy >= 20)
-		{
-			for (int y = 0; y < sy; y += (sy / 10))
-			{
-				MoveToEx(hdc, 0, y, NULL);
-				LineTo(hdc, sx, y);
-			}
-		}
+		print_grid(hdc, sx, sy);
 
 		paint_circle(hdc, xmid, ymid - radius + padding, radius, hbrush_green);
 		paint_circle(hdc, xmid - radius + padding, ymid, radius, hbrush_cyan);
@@ -131,6 +166,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
+}
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	//return individual(hWnd, message, wParam, lParam);
+	return varinat_2(hWnd, message, wParam, lParam);
 
 	return 0;
 }
