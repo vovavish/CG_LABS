@@ -21,7 +21,12 @@
 //	wc.cbClsExtra = 0;
 //	wc.cbWndExtra = 0;
 //	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-//	if (!RegisterClass(&wc)) return 0;
+//
+//	if (!RegisterClass(&wc))
+//	{
+//		return 0;
+//	}
+//
 //	hWnd = CreateWindow(WinName,
 //		_T("Каркас Windows-приложения"),
 //		WS_OVERLAPPEDWINDOW,
@@ -143,7 +148,10 @@
 //		sinth = sin(th);
 //		cosph = cos(ph);
 //		sinph = sin(ph);
-//		A = rho * sinph * costh; B = rho * sinph * sinth; C = rho * cosph;
+//		A = rho * sinph * costh;
+//		B = rho * sinph * sinth;
+//		C = rho * cosph;
+//
 //		Al = A / sqrt(A * A + B * B + C * C);
 //		Bl = B / sqrt(A * A + B * B + C * C);
 //		Cl = C / sqrt(A * A + B * B + C * C);
@@ -164,6 +172,7 @@
 //			Bn = B / sqrt(A * A + B * B + C * C);
 //			Cn = C / sqrt(A * A + B * B + C * C);
 //			alpha = (An * Al + Bn * Bl + Cn * Cl);
+//
 //			for (int j = 0; j < 4; j++)
 //			{
 //				pointl[j] = Perspective(CubePoints[Gran[i][j]].X,
