@@ -12,55 +12,11 @@ static int sx, sy;
 const int SCALE = 1000;
 const int MARK = 4;
 
-//
-//void DrawBSplines(HDC hdc, POINT points[], int count)
-//{
-//	int xA, xB, xC, xD, yA, yB, yC, yD, N = 20;
-//	double a0, a1, a2, a3, b0, b1, b2, b3, t, X, Y;
-//	static POINT point;
-//	for (int i = 1; i < count - 1; i++)
-//	{
-//		xA = points[i - 1].x;
-//		yA = points[i - 1].y;
-//		xB = points[i].x;
-//		yB = points[i].y;
-//		xC = points[i + 1].x;
-//		yC = points[i + 1].y;
-//		xD = points[i + 2].x;
-//		yD = points[i + 2].y;
-//
-//		a3 = (-xA + 3 * (xB - xC) + xD) / 6.0; b3 = (-yA + 3 * (yB - yC) + yD) / 6.0;
-//		a2 = (xA - 2 * xB + xC) / 2.0; b2 = (yA - 2 * yB + yC) / 2.0;
-//		a1 = (xC - xA) / 2.0; b1 = (yC - yA) / 2.0;
-//		a0 = (xA + 4 * xB + xC) / 6.0; b0 = (yA + 4 * yB + yC) / 6.0;
-//
-//		bool isFirst = true;
-//
-//		for (int j = 0; j <= N; j++)
-//		{
-//			float t = (float)j / (float)N;
-//			X = ((a3 * t + a2) * t + a1) * t + a0;
-//			Y = ((b3 * t + b2) * t + b1) * t + b0;
-//			if (isFirst)
-//			{
-//				MoveToEx(hdc, X, Y, NULL);
-//				isFirst = false;
-//			}
-//			else
-//			{
-//				LineTo(hdc, X, Y);
-//			}
-//		}
-//	}
-//}
-//
-
-void DrawBSplines(HDC hdc, POINT* points, int n) {
-	for (int i = 1; i < n - 1; i++) {
-		POINT pt;
+void DrawBSplines(HDC hdc, POINT* points, int n)
+{
+	for (int i = 1; i < n - 1; i++)
+	{
 		POINT a[4];
-		POINT bezi[N];
-		int cnt = 0;
 
 		a[3].x = (-points[i - 1].x + 3 * (points[i].x - points[i + 1].x) + points[i + 2].x) / 6.0f;
 		a[3].y = (-points[i - 1].y + 3 * (points[i].y - points[i + 1].y) + points[i + 2].y) / 6.0f;
@@ -71,19 +27,24 @@ void DrawBSplines(HDC hdc, POINT* points, int n) {
 		a[0].x = (points[i - 1].x + 4 * points[i].x + points[i + 1].x) / 6.0f;
 		a[0].y = (points[i - 1].y + 4 * points[i].y + points[i + 1].y) / 6.0f;
 		
-		for (int j = 0; j < N; j++)
+		POINT pt;
+		POINT bezi[N];
+
+		for (int j = 0; j < N;)
 		{
 			float t = (float)j / (float)N;
+			
 			pt.x = ((a[3].x * t + a[2].x) * t + a[1].x) * t + a[0].x;
 			pt.y = ((a[3].y * t + a[2].y) * t + a[1].y) * t + a[0].y;
-			bezi[cnt++] = pt;
+			bezi[j++] = pt;
 		}
 
 		PolyBezierTo(hdc, bezi, N);
 	}
 }
 
-void DcInLp(POINT& point) {
+void DcInLp(POINT& point)
+{
 	point.x = point.x * SCALE / sx;
 	point.y = SCALE - point.y * SCALE / sy;
 }
@@ -95,8 +56,7 @@ void transform(HDC& hdc) {
 	SetViewportOrgEx(hdc, 0, sy, NULL);
 }
 
-int APIENTRY WinMain(HINSTANCE This, HINSTANCE Prev, LPSTR cmd,
-	int mode)
+int APIENTRY WinMain(HINSTANCE This, HINSTANCE Prev, LPSTR cmd, int mode)
 {
 	HWND hWnd;
 	MSG msg;
@@ -134,8 +94,7 @@ int APIENTRY WinMain(HINSTANCE This, HINSTANCE Prev, LPSTR cmd,
 	return 0;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message,
-	WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
